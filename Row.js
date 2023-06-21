@@ -2,6 +2,41 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, Text, Image, View } from "react-native";
 import PropTypes from "prop-types";
 
+import {connect} from 'react-redux'
+import { onSelectMovie } from "./redux/actions";
+
+class Row extends React.Component {
+
+  onClick = () => {
+    this.props.onSelectMovie(this.props)
+    this.props.navigation.navigate("Details");
+  }
+
+  render() {
+    return (
+      <TouchableOpacity onPress={this.onClick}>
+        <View style={styles.row}>
+          <Image
+            style={styles.picture}
+            source={{
+              uri: this.props.poster,
+            }}
+          />
+          <Text style={styles.text}>{this.props.title}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
+
+Row.propTypes = {
+  title: PropTypes.string,
+  poster: PropTypes.string,
+};
+
+export default connect(null, {onSelectMovie})(Row)
+
+
 const styles = StyleSheet.create({
   row: {
     margin: 2,
@@ -28,24 +63,3 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 });
-
-const Row = props => (
-  <TouchableOpacity onPress={() => props.onSelectMovie(props)}>
-    <View style={styles.row}>
-      <Image
-        style={styles.picture}
-        source={{
-          uri: props.poster,
-        }}
-      />
-      <Text style={styles.text}>{props.title}</Text>
-    </View>
-  </TouchableOpacity>
-);
-
-Row.propTypes = {
-  title: PropTypes.string,
-  poster: PropTypes.string,
-};
-
-export default Row;

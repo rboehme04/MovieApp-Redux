@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import FlatListMovies from '../FlatListMovies';
 import { fetchMovies } from "../api";
 
-export default class Info extends React.Component {
+class Search extends React.Component {
 
   state = {
     search: "",
@@ -34,12 +34,14 @@ export default class Info extends React.Component {
           onChangeText={this.handleSearchInput}
           placeholder="Search"
         />
-        <FlatListMovies movies={this.state.movies} onSelectMovie={this.props.onSelectMovie} />
+        <FlatListMovies movies={this.state.movies} />
       </View>
     )
   }
  
 }
+
+export default Search
 
 const styles = StyleSheet.create({
     container: {

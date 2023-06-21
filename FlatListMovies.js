@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 
 import Row from "./Row";
 
-export default class FlatListMovies extends React.Component {
+class FlatListMovies extends React.Component {
+
   renderItem = ({ item }) => (
-    <Row {...item} onSelectMovie={this.props.onSelectMovie} />
+    <Row {...item} />
   );
 
   render() {
@@ -16,5 +17,4 @@ export default class FlatListMovies extends React.Component {
 
 FlatListMovies.propTypes = {
   movies: PropTypes.array,
-  onSelectMovie: PropTypes.func,
 };

@@ -1,21 +1,25 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { connect } from 'react-redux'
 
 import FlatListMovies from "../FlatListMovies";
 
-export default class Home extends React.Component {
+class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FlatListMovies
-          movies={this.props.movies}
-          onSelectMovie={this.props.onSelectMovie}
-        />
         {/* <Text style={styles.text}>Favourites</Text> */}
+        <FlatListMovies movies={this.props.watchlist} />
       </View>
-    );
+    )
   }
 }
+
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+})
+
+export default connect(mapStateToProps)(Home)
 
 const styles = StyleSheet.create({
   container: {

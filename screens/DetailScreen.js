@@ -9,29 +9,30 @@ import {
   Modal,
 } from "react-native";
 
-export default class Info extends React.Component {
+import { connect } from "react-redux";
+import { addToWatchlist, removeFromWatchlist } from "../redux/actions";
 
+class Detail extends React.Component {
   state = {
     modalVisible: false,
     inFavourites: false,
-  }
+  };
 
   componentDidMount() {
     this.setState({
-      inFavourites: this.isInFavourites(this.props.route.params.movie)
-    })
+      inFavourites: this.isInFavourites(this.props.movie),
+    });
   }
 
-  isInFavourites = (movie) => {
-    for (var i = 0; i < this.props.favouriteMovies.length; i++) {
-      if (this.props.favouriteMovies[i].id === movie.id)
-        return true
+  isInFavourites = movie => {
+    for (var i = 0; i < this.props.watchlist.length; i++) {
+      if (this.props.watchlist[i].id === movie.id) return true;
     }
-    return false
-  }
+    return false;
+  };
 
   handleImagePress = () => {
-    this.setState({modalVisible: true});
+    this.setState({ modalVisible: true });
   };
 
   render() {
@@ -44,52 +45,62 @@ export default class Info extends React.Component {
           <Image
             style={styles.picture}
             source={{
-              uri: this.props.route.params.movie.poster,
+              uri: this.props.movie.poster,
             }}
           />
         </TouchableOpacity>
         <View style={styles.detailContainer}>
-          <Text style={styles.textHeading}>
-            {this.props.route.params.movie.title}
-          </Text>
-          <Text style={styles.text}>{this.props.route.params.movie.year}</Text>
-          <TouchableOpacity 
-            style={[styles.btnWatchlist, this.state.inFavourites ? styles.btnRemove : styles.btnAdd]}
+          <Text style={styles.textHeading}>{this.props.movie.title}</Text>
+          <Text style={styles.text}>{this.props.movie.year}</Text>
+          <TouchableOpacity
+            style={[
+              styles.btnWatchlist,
+              this.state.inFavourites ? styles.btnRemove : styles.btnAdd,
+            ]}
             onPress={() => {
               if (this.state.inFavourites) {
-                this.props.updateWatchlist(this.props.route.params.movie, 'remove')
-                this.setState({inFavourites: false})
+                this.props.removeFromWatchlist(this.props.movie);
+                this.setState({ inFavourites: false });
               } else {
-                this.props.updateWatchlist(this.props.route.params.movie, 'add')
-                this.setState({inFavourites: true})
+                this.props.addToWatchlist(this.props.movie);
+                this.setState({ inFavourites: true });
               }
             }}
           >
-            <Text style={this.state.inFavourites ? styles.btnRemoveText : styles.btnAddText}>{this.state.inFavourites ? 'Remove from Watchlist' : 'Add to Watchlist'}</Text>
+            <Text
+              style={
+                this.state.inFavourites
+                  ? styles.btnRemoveText
+                  : styles.btnAddText
+              }
+            >
+              {this.state.inFavourites
+                ? "Remove from Watchlist"
+                : "Add to Watchlist"}
+            </Text>
           </TouchableOpacity>
           <Text style={[styles.text, styles.center, styles.rating]}>
-            {this.props.route.params.movie.rating} / 10
+            {this.props.movie.rating} / 10
           </Text>
+          <Text style={[styles.text, styles.padding5]}>Description:</Text>
           <Text style={[styles.text, styles.padding5]}>
-            Description:
-          </Text>
-          <Text style={[styles.text, styles.padding5]}>
-            {this.props.route.params.movie.description}
+            {this.props.movie.description}
           </Text>
         </View>
         <Modal
-          visible={this.state.modalVisible}f
+          visible={this.state.modalVisible}
+          f
           transparent={true}
-          onRequestClose={() => this.setState({modalVisible: false})}
+          onRequestClose={() => this.setState({ modalVisible: false })}
         >
           <View style={styles.modalContainer}>
             <Image
               style={styles.modalImage}
-              source={{ uri: this.props.route.params.movie.poster }}
+              source={{ uri: this.props.movie.poster }}
             />
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => this.setState({modalVisible: false})}
+              onPress={() => this.setState({ modalVisible: false })}
             >
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -99,6 +110,16 @@ export default class Info extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  watchlist: state.watchlist,
+  movie: state.detailMovie,
+});
+
+export default connect(mapStateToProps, {
+  addToWatchlist,
+  removeFromWatchlist,
+})(Detail);
 
 const styles = StyleSheet.create({
   container: {
