@@ -5,11 +5,12 @@ import { connect } from 'react-redux'
 import FlatListMovies from "../FlatListMovies";
 
 class Home extends React.Component {
+
   render() {
     return (
       <View style={styles.container}>
         {/* <Text style={styles.text}>Favourites</Text> */}
-        <FlatListMovies movies={this.props.watchlist} />
+        <FlatListMovies movies={this.props.watchlist} search={false} />
       </View>
     )
   }

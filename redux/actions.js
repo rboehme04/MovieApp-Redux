@@ -19,47 +19,24 @@ export const removeFromWatchlist = movie => ({
   payload: movie,
 });
 
+export const onSelectMovieWatchlist = movie => ({
+  type: MOVIE_REQUEST_FULFILLED,
+  payload: movie,
+});
+
+
 // async action creator
-export const onSelectMovie = movie => async dispatch => {
+export const onSelectMovieSearch = movie => async dispatch => {
   dispatch({ type: MOVIE_REQUEST_SENT });
   try {
-    const detailMovie = await fetchMovieDetail(movie.title);
-    dispatch({ type: MOVIE_REQUEST_FULFILLED, payload: detailMovie });
+    const detailMovie = await fetchMovieDetail(movie.title, movie.id);
+    if (detailMovie != null) {
+      dispatch({ type: MOVIE_REQUEST_FULFILLED, payload: detailMovie });
+    } else {
+      dispatch({ type: MOVIE_REQUEST_REJECTED, payload: "Not in database" });
+    }
   } catch (err) {
+    console.log("err.message: ", err.message)
     dispatch({ type: MOVIE_REQUEST_REJECTED, payload: err.message });
   }
 };
-
-// import {login} from '../api'
-
-// // action types
-// export const UPDATE_USER = 'UPDATE_USER'
-// export const UPDATE_CONTACT = 'UPDATE_CONTACT'
-// export const LOG_IN_SENT = 'LOG_IN_SENT'
-// export const LOG_IN_FULFILLED = 'LOG_IN_FULFILLED'
-// export const LOG_IN_REJECTED = 'LOG_IN_REJECTED'
-// export const CHANGE_FIRST_CONTACT = 'CHANGE_FIRST_CONTACT'
-
-// // action creators
-// export const updateUser = update => ({
-//   type: UPDATE_USER,
-//   payload: update,
-// })
-
-// export const addContact = newContact => ({
-//   type: UPDATE_CONTACT,
-//   payload: newContact,
-// })
-
-// export const changeFirstContact = () => ({type: CHANGE_FIRST_CONTACT})
-
-// // async action creator
-// export const logInUser = (username, password) => async dispatch => {
-//   dispatch({type: LOG_IN_SENT})
-//   try {
-//     const token = await login(username, password)
-//     dispatch({type: LOG_IN_FULFILLED, payload: token})
-//   } catch (err) {
-//     dispatch({type: LOG_IN_REJECTED, payload: err.message})
-//   }
-// }

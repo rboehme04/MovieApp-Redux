@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const Info = () => (
     <View style={styles.container}>
-        <Text style={styles.text}>Info's published here!</Text>
+        <Text style={styles.text}>The app was built with React Native</Text>
+        <Text style={[styles.text, styles.marginTop]}>© Richard Böhme 2023</Text>
     </View>
 )
 
@@ -16,5 +17,8 @@ const styles = StyleSheet.create({
       },
       text: {
         textAlign: "center"
-      }
+      },
+      marginTop: {
+        marginTop: 50,
+      },
 })

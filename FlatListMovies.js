@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 
 import Row from "./Row";
 
-class FlatListMovies extends React.Component {
+export default class FlatListMovies extends React.Component {
 
   renderItem = ({ item }) => (
-    <Row {...item} />
+    <Row {...item} search={this.props.search} />
   );
 
   render() {

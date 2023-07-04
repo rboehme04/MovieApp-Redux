@@ -11,6 +11,7 @@ import {
 
 import { connect } from "react-redux";
 import { addToWatchlist, removeFromWatchlist } from "../redux/actions";
+import StreamingInfo from "../streamingInfo"
 
 class Detail extends React.Component {
   state = {
@@ -31,83 +32,90 @@ class Detail extends React.Component {
     return false;
   };
 
+  updateWatchlist = movie => {
+    if (this.state.inFavourites) {
+      this.props.removeFromWatchlist(movie);
+      this.setState({ inFavourites: false });
+    } else {
+      this.props.addToWatchlist(movie);
+      this.setState({ inFavourites: true });
+    }
+  };
+
   handleImagePress = () => {
     this.setState({ modalVisible: true });
   };
 
   render() {
-    return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity
-          style={styles.imageContainer}
-          onPress={this.handleImagePress}
-        >
-          <Image
-            style={styles.picture}
-            source={{
-              uri: this.props.movie.poster,
-            }}
-          />
-        </TouchableOpacity>
-        <View style={styles.detailContainer}>
-          <Text style={styles.textHeading}>{this.props.movie.title}</Text>
-          <Text style={styles.text}>{this.props.movie.year}</Text>
+    if (this.props.movie.title == undefined) {
+      return <Text style={[styles.textHeading, styles.center, styles.padding5]}>Not found in database.</Text>
+    } else {
+      return (
+        <ScrollView style={styles.container}>
           <TouchableOpacity
-            style={[
-              styles.btnWatchlist,
-              this.state.inFavourites ? styles.btnRemove : styles.btnAdd,
-            ]}
-            onPress={() => {
-              if (this.state.inFavourites) {
-                this.props.removeFromWatchlist(this.props.movie);
-                this.setState({ inFavourites: false });
-              } else {
-                this.props.addToWatchlist(this.props.movie);
-                this.setState({ inFavourites: true });
-              }
-            }}
+            style={styles.imageContainer}
+            onPress={this.handleImagePress}
           >
-            <Text
-              style={
-                this.state.inFavourites
-                  ? styles.btnRemoveText
-                  : styles.btnAddText
-              }
-            >
-              {this.state.inFavourites
-                ? "Remove from Watchlist"
-                : "Add to Watchlist"}
-            </Text>
-          </TouchableOpacity>
-          <Text style={[styles.text, styles.center, styles.rating]}>
-            {this.props.movie.rating} / 10
-          </Text>
-          <Text style={[styles.text, styles.padding5]}>Description:</Text>
-          <Text style={[styles.text, styles.padding5]}>
-            {this.props.movie.description}
-          </Text>
-        </View>
-        <Modal
-          visible={this.state.modalVisible}
-          f
-          transparent={true}
-          onRequestClose={() => this.setState({ modalVisible: false })}
-        >
-          <View style={styles.modalContainer}>
             <Image
-              style={styles.modalImage}
-              source={{ uri: this.props.movie.poster }}
+              style={styles.picture}
+              source={{
+                uri: this.props.movie.poster,
+              }}
             />
+          </TouchableOpacity>
+          <View style={styles.detailContainer}>
+            <Text style={styles.textHeading}>{this.props.movie.title}</Text>
+            <Text style={styles.text}>{this.props.movie.year}</Text>
             <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => this.setState({ modalVisible: false })}
+              style={[
+                styles.btnWatchlist,
+                this.state.inFavourites ? styles.btnRemove : styles.btnAdd,
+              ]}
+              onPress={() => this.updateWatchlist(this.props.movie)}
             >
-              <Text style={styles.closeButtonText}>Close</Text>
+              <Text
+                style={
+                  this.state.inFavourites
+                    ? styles.btnRemoveText
+                    : styles.btnAddText
+                }
+              >
+                {this.state.inFavourites
+                  ? "Remove from Watchlist"
+                  : "Add to Watchlist"}
+              </Text>
             </TouchableOpacity>
+            <Text style={[styles.text, styles.center, styles.rating]}>
+              {this.props.movie.rating} / 10
+            </Text>
+            {this.props.movie.streaming && <StreamingInfo streaming={this.props.movie.streaming} />}
+            <Text style={[styles.text, styles.padding5]}>Description:</Text>
+            <Text style={[styles.text, styles.padding5]}>
+              {this.props.movie.description}
+            </Text>
           </View>
-        </Modal>
-      </ScrollView>
-    );
+          <Modal
+            visible={this.state.modalVisible}
+            f
+            transparent={true}
+            onRequestClose={() => this.setState({ modalVisible: false })}
+          >
+            <View style={styles.modalContainer}>
+              <Image
+                style={styles.modalImage}
+                source={{ uri: this.props.movie.poster }}
+              />
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => this.setState({ modalVisible: false })}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </ScrollView>
+      );
+    }
   }
 }
 

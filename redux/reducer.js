@@ -2,18 +2,16 @@ import {combineReducers} from 'redux'
 
 import {ADD_TO_WATCHLIST, REMOVE_FROM_WATCHLIST, MOVIE_REQUEST_SENT, MOVIE_REQUEST_FULFILLED, MOVIE_REQUEST_REJECTED} from './actions'
 
-const watchlistReducer = (state = {}, action) => {
+const watchlistReducer = (state = [], action) => {
   switch (action.type) {
     case ADD_TO_WATCHLIST:
       return [...state, action.payload]
     case REMOVE_FROM_WATCHLIST:
       return state.filter(movieItem => movieItem.title !== action.payload.title)
     default:
-      return state;
+      return [...state];
   }
 }
-
-const merge = (prev, next) => Object.assign({}, prev, next)
 
 const detailMovieReducer = (state = {}, action) => {
   switch (action.type) {
@@ -25,7 +23,7 @@ const detailMovieReducer = (state = {}, action) => {
       return action.payload
     case MOVIE_REQUEST_REJECTED:
         console.log("Movie not available")
-        return merge(state, {prevContact: action.payload})
+        return action.payload
     default:
       return state;
   }

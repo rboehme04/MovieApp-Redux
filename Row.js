@@ -1,32 +1,44 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, Image, View } from "react-native";
 import PropTypes from "prop-types";
+import { useNavigation } from "@react-navigation/native";
 
-import {connect} from 'react-redux'
-import { onSelectMovie } from "./redux/actions";
+import { connect } from "react-redux";
+import { onSelectMovieSearch } from "./redux/actions";
+import { onSelectMovieWatchlist } from "./redux/actions";
 
-class Row extends React.Component {
+// functional component --> can use useNavigation() Hook, HOC is not longer supportet
+function Row(props) {
 
-  onClick = () => {
-    this.props.onSelectMovie(this.props)
-    this.props.navigation.navigate("Details");
+  const navigation = useNavigation();
+
+  const onClick = async () => {
+    if (props.search === true){
+      try {
+        await props.onSelectMovieSearch(props); // wait for fetch-request
+        navigation.navigate("Details");
+      } catch (err) {
+        console.error("Fehler beim Laden der Detailinformationen", err);
+      }
+    } else {
+      props.onSelectMovieWatchlist(props);
+      navigation.navigate("Details");
+    }
   }
 
-  render() {
-    return (
-      <TouchableOpacity onPress={this.onClick}>
-        <View style={styles.row}>
-          <Image
-            style={styles.picture}
-            source={{
-              uri: this.props.poster,
-            }}
-          />
-          <Text style={styles.text}>{this.props.title}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+  return (
+    <TouchableOpacity onPress={onClick}>
+      <View style={styles.row}>
+        <Image
+          style={styles.picture}
+          source={{
+            uri: props.poster,
+          }}
+        />
+        <Text style={styles.text}>{props.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 }
 
 Row.propTypes = {
@@ -34,8 +46,7 @@ Row.propTypes = {
   poster: PropTypes.string,
 };
 
-export default connect(null, {onSelectMovie})(Row)
-
+export default connect(null, { onSelectMovieSearch, onSelectMovieWatchlist })(Row);
 
 const styles = StyleSheet.create({
   row: {
@@ -59,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingLeft: 10,
-    textAlignVertical: 'center',
-    overflow: 'hidden',
+    textAlignVertical: "center",
+    overflow: "hidden",
   },
 });

@@ -6,8 +6,6 @@ import Home from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import DetailScreen from "../screens/DetailScreen";
 
-import { fetchMovieDetail } from "../api";
-
 const Stack = createNativeStackNavigator();
 
 export default class StackNavigatorApp extends React.Component {
@@ -18,7 +16,7 @@ export default class StackNavigatorApp extends React.Component {
           name="Home"
           component={Home}
           options={({ navigation }) => ({
-            headerTitle: "Home",
+            headerTitle: "Watchlist",
             headerRight: () => (
               <Button
                 title="Search"
