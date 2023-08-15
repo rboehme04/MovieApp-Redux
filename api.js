@@ -59,10 +59,10 @@ export const fetchMovies = async title => {
   const response =
     title != null
       ? await fetch(
-          `http://www.omdbapi.com/?apikey=b86e0541&type=movie&s=${title}`
+          `http://www.omdbapi.com/?apikey=YOUR_KEY&type=movie&s=${title}`
         )
       : await fetch(
-          `http://www.omdbapi.com/?apikey=b86e0541&type=movie&s=Star%20Wars`
+          `http://www.omdbapi.com/?apikey=YOUR_KEY&type=movie&s=Star%20Wars`
         );
 
   //get key {Search}
@@ -108,8 +108,8 @@ const fetchMovieDetailStreaming = async imdbID => {
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Key": "8f67280666msha315edd792ad7f0p119824jsndc672f9b0f2f",
-      "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com",
+      "X-RapidAPI-Key": "YOUR_KEY",
+      "X-RapidAPI-Host": "YOUR_HOST",
     },
   };
 
